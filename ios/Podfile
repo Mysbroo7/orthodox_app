@@ -1,10 +1,14 @@
 platform :ios, '13.0'
 
+# تأكد من أن Flutter يعرف أين يجد ملفات الإعدادات في Codemagic
+load File.join(File.dirname(File.realpath(__FILE__)), 'Flutter', 'generated_config_helper.rb') if File.exist?(File.join(File.dirname(File.realpath(__FILE__)), 'Flutter', 'generated_config_helper.rb'))
+
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # تأكد من وجود هذا السطر للسماح لـ Flutter بتثبيت الإضافات تلقائياً في السحابة
+  # هذا السطر ضروري جداً لربط الإضافات مثل flutter_native_splash
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
 post_install do |installer|
@@ -12,7 +16,6 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target) if defined?(flutter_additional_ios_build_settings)
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-      config.build_settings['ENABLE_BITCODE'] = 'NO'
     end
   end
 end
