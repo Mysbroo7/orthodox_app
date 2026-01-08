@@ -2,37 +2,31 @@ name: Flutter Build iOS
 
 on:
   push:
-    branches: [ master ] # سيعمل عند كل رفع كود لفرع master
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: macos-14
     
     steps:
-      # 1. سحب الكود
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. تثبيت Java (مطلوب لبعض أدوات بناء أندرويد/فلاتر)
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. تثبيت Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # يمكنك تغييرها لإصدارك المفضل
-          channel: 'stable'
+          channel: 'stable' # سيقوم بجلب أحدث إصدار مستقر متوافق مع مشروعك
 
-      # 4. تحميل المكتبات (Dependencies)
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. بناء تطبيق iOS (بدون توقيع رقمي)
       - name: Build iOS
         run: |
-          # بناء نسخة للـ Simulator للتأكد من سلامة الكود برمجياً
+          # بناء النسخة للتأكد من صحة الأكواد
           flutter build ios --no-codesign --simulator
